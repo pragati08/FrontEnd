@@ -1,13 +1,13 @@
 import React from 'react';
 import {Avatar, Button, Grid,RadioGroup,TextField, Typography, FormLabel} from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-
-
-
+import "font-awesome/css/font-awesome.css";
 import axios from 'axios';
+
      var avatarStyle={backgroundColor:'black', margin:25};
      const btnStyle={margin:'8px 0'};
      const headerStyle={margin:0};
+     const EyeStyle={    right: '25px' ,position : 'absolute' , marginTop: '20px'}
     
     
      
@@ -39,6 +39,7 @@ class Signup extends React.Component{
         email:'',
         phone:'',
         password:'',
+        isPasswordShown: false,
         confirmpassword:'',
         clickedYes: false,
         role:'',
@@ -102,6 +103,13 @@ class Signup extends React.Component{
         password: event.target.value
         })
     }
+
+    togglePasswordVisiblity = () => {
+        const { isPasswordShown } = this.state;
+        this.setState({ isPasswordShown: !isPasswordShown });
+      };
+
+
     changeConfirmPassword(event)
     {
         this.setState({
@@ -221,6 +229,7 @@ onSubmit(event)
     render()
     {
         const {errors} = this.state;
+        const { isPasswordShown } = this.state;
 
         const radioYes = this.state.clickedYes ? <div>
         <TextField label='vehicleNumber' type="number" placeholder="Enter Vehicle Number" fullWidth required
@@ -287,9 +296,14 @@ onSubmit(event)
                 ):null 
                     }
 
-               <TextField  label='Password' placeholder="Enter Password" type="password" fullWidth required
+               <TextField  label='Password' placeholder="Enter Password" type={isPasswordShown ? "text" : "password"} fullWidth required
                 onChange={this.changePassword} value={this.state.password} 
                 />
+                <button onClick={this.togglePasswordVisiblity} style={EyeStyle} >
+                    <i className= {`fa ${isPasswordShown ? " fa-eye-slash " : " fa-eye "} `}/>
+                </button>
+                    
+                  
                  {this.state.passwordError ?(
                     <div style={{fontSize:12,color:"red"}}>{
                         this.state.passwordError}
@@ -298,8 +312,8 @@ onSubmit(event)
                     }
 
 
-               <TextField label='Confirm Password' placeholder="Confirm Password" type="password" fullWidth required
-                onChange={this.changeConfirmPassword} value={this.state.confirmpassword}/>
+               {/* <TextField label='Confirm Password' placeholder="Confirm Password" type="password" fullWidth required
+                onChange={this.changeConfirmPassword} value={this.state.confirmpassword}/> */}
 
 
 

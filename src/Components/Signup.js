@@ -7,7 +7,7 @@ import axios from 'axios';
      var avatarStyle={backgroundColor:'black', margin:25};
      const btnStyle={margin:'8px 0'};
      const headerStyle={margin:0};
-     const EyeStyle={    right: '25px' ,position : 'absolute' , marginTop: '20px'}
+     const EyeStyle={right: '25px' ,position : 'absolute' , marginTop: '20px'}
     
     
      
@@ -21,11 +21,11 @@ const initialState ={
         vehicleNumber:'',
         location:'',
         activityStatus:'',
-     nameError:"",
-     emailError:"",
-     passwordError:""  ,
-     phoneError:"" 
-}
+        nameError:"",
+        emailError:"",
+        passwordError:""  ,
+        phoneError:"" 
+    }
 
 class Signup extends React.Component{
  state=initialState;
@@ -46,10 +46,11 @@ class Signup extends React.Component{
         vehicleNumber:'',
         location:'',
         activityStatus:'',
-       nameError:"",
-       emailError:"",
-       passwordError:"",
-       phoneError:""
+        nameError:"",
+        emailError:"",
+        passwordError:"",
+        phoneError:"",
+        checked: false
         
     }
         this.changefirstName=this.changefirstName.bind(this);
@@ -65,10 +66,15 @@ class Signup extends React.Component{
         this.changeLocation=this.changeLocation.bind(this);
         this.changeActivityStatus=this.changeActivityStatus.bind(this);
         this.changeGender=this.changeGender.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
     }
 
-    
+    handleChange() {
+        this.setState({
+          checked: !this.state.checked
+        })
+      }
 
     changefirstName(event)
     {
@@ -152,7 +158,7 @@ class Signup extends React.Component{
     validate=()=>{
         let firstNameError="";
         let lastNameError="";
-       let emailError="";
+        let emailError="";
         let passwordError="";
         let phoneError="";
 
@@ -185,13 +191,8 @@ onSubmit(event)
 {
     event.preventDefault();
     const isValid= this.validate();
-    if(!isValid){
-        
-    }
-    if(isValid){
-        console.log(this.state)
-        this.setState(initialState);
-    }
+    
+    
     const registered =
     {
         firstname:this.state.firstname,
@@ -208,30 +209,34 @@ onSubmit(event)
 
 
     }
-    axios.post('http://localhost:5900/users/register',registered)
+    if(isValid){
+        console.log(this.state)
+        // this.setState(initialState);
+        axios.post('http://localhost:5900/users/register',registered)
     .then(res=>console.log(res.data))
+    }
     
-    this.setState({
-        firstname:'',
-        lastname:'',
-        email:'',
-        phone:'',
-        password:'',
-        confirmpassword:'',
-        selectedOption:'',
-        vehicleNumber:'',
-        location:'',
-        activityStatus:''  ,
-        gender:" "
-    })
+    
+    // this.setState({
+    //     firstname:'',
+    //     lastname:'',
+    //     email:'',
+    //     phone:'',
+    //     password:'',
+    //     confirmpassword:'',
+    //     selectedOption:'',
+    //     vehicleNumber:'',
+    //     location:'',
+    //     activityStatus:''  ,
+    //     gender:" "
+    // })
 }
 
     render()
     {
-        const {errors} = this.state;
         const { isPasswordShown } = this.state;
 
-        const radioYes = this.state.clickedYes ? <div>
+        const deliveryDetails = this.state.checked  ? <div>
         <TextField label='vehicleNumber' type="number" placeholder="Enter Vehicle Number" fullWidth required
         onChange={this.changeVehicleNumber} value={this.state.vehicleNumber}/>
         <TextField label='Location' placeholder="Enter Location" fullWidth required
@@ -299,7 +304,7 @@ onSubmit(event)
                <TextField  label='Password' placeholder="Enter Password" type={isPasswordShown ? "text" : "password"} fullWidth required
                 onChange={this.changePassword} value={this.state.password} 
                 />
-                <button onClick={this.togglePasswordVisiblity} style={EyeStyle} >
+                <button type="button" onClick={this.togglePasswordVisiblity} style={EyeStyle} >
                     <i className= {`fa ${isPasswordShown ? " fa-eye-slash " : " fa-eye "} `}/>
                 </button>
                     
@@ -320,7 +325,7 @@ onSubmit(event)
                 <TextField label="Birthdate"  type="date"  defaultValue="1997-09-11" fullWidth required
                  onChange={this.changeBirthDate} value={this.state.birthDate}/>
 
-            
+                <br></br><br></br>
                 <RadioGroup as={TextField}  label = "Gender" style={{ display: 'inline', margin:'2 auto'}}>
                 <FormLabel component="legend">Gender
                         <input type="radio" value="male" name="gender"
@@ -329,23 +334,19 @@ onSubmit(event)
                         <input type="radio" value="female" name="gender"
                         checked={this.state.gender === "female"}
                         onChange={this.changeGender}/> Female </FormLabel> </RadioGroup>
+                <br></br>
+
+                <div>
+                    <label>Work as Delivery Executive ?</label>
+                    <input 
+                    type="checkbox" 
+                    checked={ this.state.checked } 
+                    onChange={ this.handleChange } />
+                </div>
+
+                 { deliveryDetails }
+
                 
-                <br></br><br></br>
-
-
-
-                <div className="radio"> Do you wish to work as delivery executive?
-                    <label>                    
-                        <input type="radio" value='delivery' 
-                        clickedYes={this.state.clickedYes}
-                        onClick={this.yesHandler}
-                        checked={this.state.selectedOption === 'delivery'} 
-                        onChange={this.changeRole} /> 
-                     </label>
-
-                {radioYes}
-               
-                </div> 
                 <br></br>
                  
 
